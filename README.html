@@ -3,23 +3,23 @@
 <h2 id="highlights">Highlights</h2>
 <ol style="list-style-type: decimal">
 <li><p>A <code>2dsphere</code> index was added to the MongoDB collection index.</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="dt">Zip</span>.collection.indexes.create_one({<span class="st">:loc=</span>&gt;<span class="dt">Mongo</span>::<span class="dt">Index</span>::<span class="dt">GEO2DSPHERE</span>})</code></pre></li>
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="dt">Zip</span>.collection.indexes.create_one({<span class="st">:loc=</span>&gt;<span class="dt">Mongo</span>::<span class="dt">Index</span>::<span class="dt">GEO2DSPHERE</span>})</code></pre></div></li>
 <li><p>The index can be removed with the following commanfd</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="dt">Zip</span>.collection.indexes.drop_one(<span class="st">&quot;loc_2dsphere&quot;</span>)</code></pre></li>
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="dt">Zip</span>.collection.indexes.drop_one(<span class="st">&quot;loc_2dsphere&quot;</span>)</code></pre></div></li>
 <li><p>These two commands have been integrated with <code>rake</code>. Don't worry that there is no ActiveRecord involved -- the flow still works and feels natural.</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby">$ rake db<span class="st">:migrate</span>
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">$ rake db<span class="st">:migrate</span>
 == <span class="dv">20151115173006</span> <span class="dt">AddIndexToZips</span>: migrating ===================================
 zips_development.createIndexes | <span class="dt">STARTED</span> | {<span class="st">&quot;createIndexes&quot;</span>=&gt;<span class="st">&quot;zips&quot;</span>, 
 <span class="st">&quot;indexes&quot;</span>=&gt;[{<span class="st">:key=</span>&gt;{<span class="st">:loc=</span>&gt;<span class="st">&quot;2dsphere&quot;</span>}, <span class="st">:name=</span>&gt;<span class="st">&quot;loc_2dsphere&quot;</span>}]}
 zips_development.createIndexes | <span class="dt">SUCCEEDED</span> | <span class="fl">0.00048591000000000004</span>s
-== <span class="dv">20151115173006</span> <span class="dt">AddIndexToZips</span>: migrated (<span class="fl">0.0077</span>s) ==========================</code></pre>
-<pre class="sourceCode ruby"><code class="sourceCode ruby">$ rake db<span class="st">:rollback</span>
+== <span class="dv">20151115173006</span> <span class="dt">AddIndexToZips</span>: migrated (<span class="fl">0.0077</span>s) ==========================</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">$ rake db<span class="st">:rollback</span>
 == <span class="dv">20151115173006</span> <span class="dt">AddIndexToZips</span>: reverting ===================================
 zips_development.dropIndexes | <span class="dt">STARTED</span> | {<span class="st">&quot;dropIndexes&quot;</span>=&gt;<span class="st">&quot;zips&quot;</span>, <span class="st">&quot;index&quot;</span>=&gt;<span class="st">&quot;loc_2dsphere&quot;</span>}
 zips_development.dropIndexes | <span class="dt">SUCCEEDED</span> | <span class="fl">0.000458864</span>s
-== <span class="dv">20151115173006</span> <span class="dt">AddIndexToZips</span>: reverted (<span class="fl">0.0070</span>s) ==========================</code></pre></li>
+== <span class="dv">20151115173006</span> <span class="dt">AddIndexToZips</span>: reverted (<span class="fl">0.0070</span>s) ==========================</code></pre></div></li>
 <li><p>A new find method was added to the <code>Zip</code> model class which used the <code>$near</code> command to locate other <code>Zip</code> instances within a min/max number of miles. Miles had to be converted to meters.</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="co">#convert miles to meters</span>
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="co">#convert miles to meters</span>
 miles_to_meters=<span class="fl">1609.34</span>
 min_meters=min_miles.to_i*miles_to_meters
 max_meters=max_miles.to_i*miles_to_meters
@@ -33,28 +33,28 @@ near_zips=[]
       <span class="st">:$maxDistance=</span>&gt;max_meters}}
     ).limit(limit).each <span class="kw">do</span> |z|
   near_zips &lt;&lt; <span class="dt">Zip</span>.new(z)
-<span class="kw">end</span></code></pre></li>
+<span class="kw">end</span></code></pre></div></li>
 <li><p>The controller defined a new <code>@locations</code> hash to store a the hash representation of the zip locations. This collection is read in by the <code>index</code> and <code>show</code> pages. Notice that each pin can tell you the city name associate with it.</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby">[{<span class="st">:lat=</span>&gt;<span class="fl">37.228657</span>, <span class="st">:lng=</span>&gt;-<span class="fl">76.542346</span>, <span class="st">:infowindow=</span>&gt;<span class="st">&quot;YORKTOWN&quot;</span>},
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">[{<span class="st">:lat=</span>&gt;<span class="fl">37.228657</span>, <span class="st">:lng=</span>&gt;-<span class="fl">76.542346</span>, <span class="st">:infowindow=</span>&gt;<span class="st">&quot;YORKTOWN&quot;</span>},
  {<span class="st">:lat=</span>&gt;<span class="fl">39.707341</span>, <span class="st">:lng=</span>&gt;-<span class="fl">77.495609</span>, <span class="st">:infowindow=</span>&gt;<span class="st">&quot;FORT RITCHIE&quot;</span>},
  {<span class="st">:lat=</span>&gt;<span class="fl">38.558946</span>, <span class="st">:lng=</span>&gt;-<span class="fl">75.107762</span>, <span class="st">:infowindow=</span>&gt;<span class="st">&quot;MILLVILLE&quot;</span>},
  {<span class="st">:lat=</span>&gt;<span class="fl">39.459959</span>, <span class="st">:lng=</span>&gt;-<span class="fl">77.958915</span>, <span class="st">:infowindow=</span>&gt;<span class="st">&quot;MARTINSBURG&quot;</span>},
  {<span class="st">:lat=</span>&gt;<span class="fl">38.520712</span>,
   <span class="st">:lng=</span>&gt;-<span class="fl">76.781677</span>,
   <span class="st">:infowindow=</span>&gt;<span class="st">&quot;HUGHESVILLE&quot;</span>,
-  <span class="st">:picture=</span>&gt;{<span class="st">:url=</span>&gt;<span class="st">&quot;/images/marker32.png&quot;</span>, <span class="st">:width=</span>&gt;<span class="dv">32</span>, <span class="st">:height=</span>&gt;<span class="dv">32</span>}}]</code></pre></li>
+  <span class="st">:picture=</span>&gt;{<span class="st">:url=</span>&gt;<span class="st">&quot;/images/marker32.png&quot;</span>, <span class="st">:width=</span>&gt;<span class="dv">32</span>, <span class="st">:height=</span>&gt;<span class="dv">32</span>}}]</code></pre></div></li>
 <li><p>The collection of hashes is displayed using the following javascript (and supporting files that were part of GMaps4Rails setup)</p>
-<pre class="sourceCode html"><code class="sourceCode html"><span class="kw">&lt;div</span><span class="ot"> style=</span><span class="st">&#39;width: 800px;&#39;</span><span class="kw">&gt;</span>
+<div class="sourceCode"><pre class="sourceCode html"><code class="sourceCode html"><span class="kw">&lt;div</span><span class="ot"> style=</span><span class="st">&#39;width: 800px;&#39;</span><span class="kw">&gt;</span>
   <span class="kw">&lt;div</span><span class="ot"> id=</span><span class="st">&quot;map&quot;</span><span class="ot"> style=</span><span class="st">&#39;width: 800px; height: 400px;&#39;</span><span class="kw">&gt;&lt;/div&gt;</span>
 <span class="kw">&lt;/div&gt;</span>
 <span class="kw">&lt;script</span><span class="ot"> type=</span><span class="st">&quot;text/javascript&quot;</span><span class="kw">&gt;</span>
-<span class="er">    handler = Gmaps.build(&#39;Google&#39;);</span>
-<span class="er">    handler.buildMap({ provider: {}, internal: {id: &#39;map&#39;}}, function(){</span>
-<span class="er">      markers = handler.addMarkers(&lt;%=raw @locations.to_json %&gt;);</span>
-<span class="er">      handler.bounds.extendWith(markers);</span>
-<span class="er">      handler.fitMapToBounds();</span>
-    });
-<span class="kw">&lt;/script&gt;</span></code></pre></li>
+    handler <span class="op">=</span> <span class="va">Gmaps</span>.<span class="at">build</span>(<span class="st">&#39;Google&#39;</span>)<span class="op">;</span>
+    <span class="va">handler</span>.<span class="at">buildMap</span>(<span class="op">{</span> <span class="dt">provider</span><span class="op">:</span> <span class="op">{},</span> <span class="dt">internal</span><span class="op">:</span> <span class="op">{</span><span class="dt">id</span><span class="op">:</span> <span class="st">&#39;map&#39;</span><span class="op">}},</span> <span class="kw">function</span>()<span class="op">{</span>
+      markers <span class="op">=</span> <span class="va">handler</span>.<span class="at">addMarkers</span>(<span class="op">&lt;%=</span>raw @<span class="va">locations</span>.<span class="at">to_json</span> <span class="op">%&gt;</span>)<span class="op">;</span>
+      <span class="va">handler</span>.<span class="va">bounds</span>.<span class="at">extendWith</span>(markers)<span class="op">;</span>
+      <span class="va">handler</span>.<span class="at">fitMapToBounds</span>()<span class="op">;</span>
+    <span class="op">}</span>)<span class="op">;</span>
+<span class="op">&lt;</span><span class="ss">/script&gt;</span></code></pre></div></li>
 </ol>
 <h2 id="test-drive">Test Drive</h2>
 <ol style="list-style-type: decimal">
@@ -78,7 +78,7 @@ near_zips=[]
       invoke  active_record
       create    db/migrate/20151115173006_add_index_to_zips.rb</code></pre></li>
 <li><p>Edit the migration file created in <code>db/migrate</code> with the following <code>up</code> and <code>down</code> commands to add and remove the index. <code>:loc</code> is the field used be the zips collection to hold the geolocation information.</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">class</span> <span class="dt">AddIndexToZips</span> &lt; <span class="dt">ActiveRecord</span>::<span class="dt">Migration</span>
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">class</span> <span class="dt">AddIndexToZips</span> &lt; <span class="dt">ActiveRecord</span>::<span class="dt">Migration</span>
 
   <span class="co"># add a 2dsphere index to Zip.loc field</span>
   <span class="kw">def</span> up
@@ -88,7 +88,7 @@ near_zips=[]
   <span class="kw">def</span> down
       <span class="dt">Zip</span>.collection.indexes.drop_one(<span class="st">&quot;loc_2dsphere&quot;</span>)
   <span class="kw">end</span>
-<span class="kw">end</span></code></pre></li>
+<span class="kw">end</span></code></pre></div></li>
 <li><p>Use <code>rake</code> to migrate the database to add the index.</p>
 <pre><code>$ rake db:migrate
 == 20151115173006 AddIndexToZips: migrating ===================================
@@ -101,16 +101,16 @@ D, [2015-11-15T13:05:20.018183 #70768] DEBUG -- : MONGODB | localhost:27017
 == 20151115173006 AddIndexToZips: migrated (0.3304s) ==========================</code></pre></li>
 </ol>
 <h3 id="updated-gemfile-with-gmaps4rails-gem">Updated Gemfile with Gmaps4Rails Gem</h3>
-<p>Add the <code>gmaps4rails</code> gem to the Gemfile. Documentation for the gem is available at <a href="https://github.com/apneadiving/Google-Maps-for-Rails">https://github.com/apneadiving/Google-Maps-for-Rails</a>. It is highly recommended that you also watch the referenced <a href="https://www.youtube.com/watch?v=R0l-7en3dUw&amp;feature=youtu.be">YouTube Video</a></p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby">gem <span class="st">&#39;gmaps4rails&#39;</span></code></pre>
+<p>Add the <code>gmaps4rails</code> gem to the Gemfile. Documentation for the gem is available at <a href="https://github.com/apneadiving/Google-Maps-for-Rails" class="uri">https://github.com/apneadiving/Google-Maps-for-Rails</a>. It is highly recommended that you also watch the referenced <a href="https://www.youtube.com/watch?v=R0l-7en3dUw&amp;feature=youtu.be">YouTube Video</a></p>
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">gem <span class="st">&#39;gmaps4rails&#39;</span></code></pre></div>
 <pre class="shell"><code>$ bundle
 $ rails s</code></pre>
 <h3 id="add-attribute-support-for-geolocation-properties-in-zip-model-class">Add Attribute Support for Geolocation Properties in <code>Zip</code> Model Class</h3>
 <ol style="list-style-type: decimal">
 <li><p>The original <code>zips</code> application left off support for the <code>:loc</code> property. Add <code>:longitude</code> and <code>:latitude</code> as attributes.</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="ot">attr_accessor</span> <span class="st">:id</span>, <span class="st">:city</span>, <span class="st">:state</span>, <span class="st">:population</span>, <span class="st">:longitude</span>, <span class="st">:latitude</span></code></pre></li>
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="ot">attr_accessor</span> <span class="st">:id</span>, <span class="st">:city</span>, <span class="st">:state</span>, <span class="st">:population</span>, <span class="st">:longitude</span>, <span class="st">:latitude</span></code></pre></div></li>
 <li><p>Add initialization support for the new attributes in the the <code>initialize()</code> method.</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">def</span> initialize(params={})
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">def</span> initialize(params={})
 ...
   <span class="kw">if</span> params[<span class="st">:loc</span>]
     <span class="ot">@longitude</span>=params[<span class="st">:loc</span>][<span class="dv">0</span>]
@@ -118,13 +118,13 @@ $ rails s</code></pre>
    <span class="kw">else</span>
      <span class="ot">@longitude</span>=params[<span class="st">:longitude</span>]
      <span class="ot">@latitude</span>=params[<span class="st">:latitude</span>]
-   <span class="kw">end</span></code></pre></li>
+   <span class="kw">end</span></code></pre></div></li>
 <li><p>Add the new attributes to the query projections within the class. There are at least two occurrences.</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby">.projection({_id<span class="st">:true</span>, city<span class="st">:true</span>, state<span class="st">:true</span>, pop<span class="st">:true</span>, loc<span class="st">:true</span>})</code></pre></li>
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">.projection({_id<span class="st">:true</span>, city<span class="st">:true</span>, state<span class="st">:true</span>, pop<span class="st">:true</span>, loc<span class="st">:true</span>})</code></pre></div></li>
 </ol>
 <h3 id="add-geolocation-search-in-zip-model-class">Add Geolocation Search in <code>Zip</code> Model Class</h3>
 <p>Add the following instance method to the <code>Zip</code> model class to perform a 2dsphere, geolocation search for zips near its location. Accept a <code>max_miles</code>, <code>min_miles</code>, and <code>limit</code>. The miles have to be converted to meters. The coordinates are passed in as an array with <code>longitude</code> first and <code>latitude</code> second.</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="co">#return a list of zipcodes within min/max miles</span>
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="co">#return a list of zipcodes within min/max miles</span>
 <span class="kw">def</span> near(max_miles, min_miles, limit)
   max_miles=max_miles.nil? ? <span class="dv">1000</span> : max_miles.to_i
   min_miles=min_miles.nil? ? <span class="dv">0</span> : min_miles.to_i
@@ -147,11 +147,11 @@ $ rails s</code></pre>
     near_zips &lt;&lt; <span class="dt">Zip</span>.new(z)
   <span class="kw">end</span>
   near_zips
-<span class="kw">end</span></code></pre>
+<span class="kw">end</span></code></pre></div>
 <h3 id="add-geolocation-search-support-in-zips-controller">Add Geolocation Search Support in <code>Zips</code> Controller</h3>
 <ol style="list-style-type: decimal">
 <li><p>Add the following helper method to the controller as a private method. It accepts a collection of Zip objects and works with Gmaps3rails to create an array of hashes that is used by googlemaps to display pins in the map. If there is a current <span class="citation">@zip</span> -- it will be made the center of the map with a special icon. Note that this definition is referencing a PNG file placed in the <code>public/images</code> folder.</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">def</span> zip_markers zips
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">def</span> zip_markers zips
   <span class="co">#build the marker for the center of the map</span>
   <span class="kw">if</span> <span class="ot">@zip</span>
     center_marker = <span class="dt">Gmaps4rails</span>.build_markers(<span class="ot">@zip</span>) <span class="kw">do</span> |zip, marker|
@@ -180,7 +180,7 @@ $ rails s</code></pre>
   <span class="co">#add target city of left out</span>
   locations &lt;&lt; center_marker[<span class="dv">0</span>]  <span class="kw">if</span> !marked_zip
   <span class="kw">return</span> locations
-<span class="kw">end</span></code></pre></li>
+<span class="kw">end</span></code></pre></div></li>
 <li><p>Add an image file to the <code>public/images</code> folder for the map definition to reference.</p>
 <pre class="shell"><code>$ls public/images
 marker24.png
@@ -190,37 +190,38 @@ marker48.png</code></pre></li>
 <h3 id="update-actions-to-build-geolocation-markers">Update Actions to Build Geolocation Markers</h3>
 <ol style="list-style-type: decimal">
 <li><p>Have the index page define a list of geolocation markers for the zipcodes that are deplayed on the page.</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">def</span> index
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">def</span> index
   ...
   <span class="ot">@zips</span> = <span class="dt">Zip</span>.paginate(args)
   <span class="ot">@locations</span> = zip_markers <span class="ot">@zips</span>
-<span class="kw">end</span></code></pre></li>
+<span class="kw">end</span></code></pre></div></li>
 <li><p>Have the individual <code>show</code> page display a map with nearby cities.</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">def</span> show
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">def</span> show
   near_zips=<span class="ot">@zip</span>.near(params[<span class="st">:max_miles</span>], params[<span class="st">:min_miles</span>] ,params[<span class="st">:limit</span>])
   <span class="ot">@locations</span>=zip_markers near_zips
-<span class="kw">end</span></code></pre></li>
+<span class="kw">end</span></code></pre></div></li>
 </ol>
 <h3 id="add-map-support-to-views">Add Map Support to Views</h3>
 <ol style="list-style-type: decimal">
 <li><p>Add the following script file references to the <code>app/views/layouts/application.html.erb</code>. This part of the GMaps4Rails setup.</p>
-<pre class="sourceCode html"><code class="sourceCode html"><span class="kw">&lt;head&gt;</span>
+<div class="sourceCode"><pre class="sourceCode html"><code class="sourceCode html"><span class="kw">&lt;head&gt;</span>
   ...
-  <span class="kw">&lt;script</span><span class="ot"> src=</span><span class="st">&quot;//maps.google.com/maps/api/js?v=3.18</span><span class="er">&amp;</span><span class="st">sensor=false</span><span class="er">&amp;</span><span class="st">client=</span><span class="er">&amp;</span><span class="st">key=</span><span class="er">&amp;</span><span class="st">libraries=geometry</span><span class="er">&amp;</span><span class="st">language=</span><span class="er">&amp;</span><span class="st">hl=</span><span class="er">&amp;</span><span class="st">region=&quot;</span><span class="kw">&gt;&lt;/script&gt;</span> 
-  <span class="kw">&lt;script</span><span class="ot"> src=</span><span class="st">&quot;//google-maps-utility-library-v3.googlecode.com/svn/tags/markerclustererplus/2.0.14/src/markerclusterer_packed.js&quot;</span><span class="kw">&gt;&lt;/script&gt;</span>
-<span class="kw">&lt;/head&gt;</span></code></pre></li>
+  <span class="kw">&lt;script</span><span class="ot"> src=</span><span class="st">&quot;//maps.google.com/maps/api/js?v=3.23</span><span class="er">&amp;</span><span class="st">sensor=false</span><span class="er">&amp;</span><span class="st">client=</span><span class="er">&amp;</span><span class="st">key=</span><span class="er">&amp;</span><span class="st">libraries=geometry</span><span class="er">&amp;</span><span class="st">language=</span><span class="er">&amp;</span><span class="st">hl=</span><span class="er">&amp;</span><span class="st">region=&quot;</span><span class="kw">&gt;&lt;/script&gt;</span>
+  <span class="kw">&lt;script</span><span class="ot"> src=</span><span class="st">&quot;//cdn.rawgit.com/mahnunchik/markerclustererplus/master/dist/markerclusterer.min.js&quot;</span><span class="kw">&gt;&lt;/script&gt;</span>
+  <span class="kw">&lt;script</span><span class="ot"> src=</span><span class="st">&#39;//cdn.rawgit.com/printercu/google-maps-utility-library-v3-read-only/master/infobox/src/infobox_packed.js&#39;</span><span class="ot"> type=</span><span class="st">&#39;text/javascript&#39;</span><span class="kw">&gt;&lt;/script&gt;</span>
+<span class="kw">&lt;/head&gt;</span></code></pre></div></li>
 <li><p>Add the following to the bottom of the <code>index</code> page (<code>app/views/zips/index.html.erb</code>) and and <code>show</code> page (<code>app/views/zips/show.html.erb</code> except This will display the map and place location markers for elements within the <code>@locations</code> collection`.</p>
-<pre class="sourceCode html"><code class="sourceCode html"><span class="kw">&lt;div</span><span class="ot"> style=</span><span class="st">&#39;width: 800px;&#39;</span><span class="kw">&gt;</span>
+<div class="sourceCode"><pre class="sourceCode html"><code class="sourceCode html"><span class="kw">&lt;div</span><span class="ot"> style=</span><span class="st">&#39;width: 800px;&#39;</span><span class="kw">&gt;</span>
   <span class="kw">&lt;div</span><span class="ot"> id=</span><span class="st">&quot;map&quot;</span><span class="ot"> style=</span><span class="st">&#39;width: 800px; height: 400px;&#39;</span><span class="kw">&gt;&lt;/div&gt;</span>
 <span class="kw">&lt;/div&gt;</span>
 <span class="kw">&lt;script</span><span class="ot"> type=</span><span class="st">&quot;text/javascript&quot;</span><span class="kw">&gt;</span>
-<span class="er">    handler = Gmaps.build(&#39;Google&#39;);</span>
-<span class="er">    handler.buildMap({ provider: {}, internal: {id: &#39;map&#39;}}, function(){</span>
-<span class="er">      markers = handler.addMarkers(&lt;%=raw @locations.to_json %&gt;);</span>
-<span class="er">      handler.bounds.extendWith(markers);</span>
-<span class="er">      handler.fitMapToBounds();</span>
-    });
-<span class="kw">&lt;/script&gt;</span></code></pre></li>
+    handler <span class="op">=</span> <span class="va">Gmaps</span>.<span class="at">build</span>(<span class="st">&#39;Google&#39;</span>)<span class="op">;</span>
+    <span class="va">handler</span>.<span class="at">buildMap</span>(<span class="op">{</span> <span class="dt">provider</span><span class="op">:</span> <span class="op">{},</span> <span class="dt">internal</span><span class="op">:</span> <span class="op">{</span><span class="dt">id</span><span class="op">:</span> <span class="st">&#39;map&#39;</span><span class="op">}},</span> <span class="kw">function</span>()<span class="op">{</span>
+      markers <span class="op">=</span> <span class="va">handler</span>.<span class="at">addMarkers</span>(<span class="op">&lt;%=</span>raw @<span class="va">locations</span>.<span class="at">to_json</span> <span class="op">%&gt;</span>)<span class="op">;</span>
+      <span class="va">handler</span>.<span class="va">bounds</span>.<span class="at">extendWith</span>(markers)<span class="op">;</span>
+      <span class="va">handler</span>.<span class="at">fitMapToBounds</span>()<span class="op">;</span>
+    <span class="op">}</span>)<span class="op">;</span>
+<span class="op">&lt;</span><span class="ss">/script&gt;</span></code></pre></div></li>
 </ol>
 <h2 id="heroku-deployment">Heroku Deployment</h2>
 <p>This deployment assumes that you have already deployed the <code>Zips</code> application and can re-use the same database for both applications.</p>
